@@ -1,46 +1,47 @@
-project(obs-x264)
+project(obs-x265)
 
-find_package(Libx264 REQUIRED)
-include_directories(${LIBX264_INCLUDE_DIRS})
-add_definitions(${LIBX264_DEFINITIONS})
+find_package(PkgConfig)
+pkg_check_modules(LIBX265 REQUIRED x265)
+include_directories(${LIBX265_INCLUDE_DIRS})
+add_definitions(${LIBX265_DEFINITIONS})
 
-set(obs-x264-util_HEADERS
-	obs-x264-options.h)
+set(obs-x265-util_HEADERS
+	obs-x265-options.h)
 
-set(obs-x264-util_SOURCES
-	obs-x264-options.c)
+set(obs-x265-util_SOURCES
+	obs-x265-options.c)
 
-add_library(obs-x264-util STATIC
-	${obs-x264-util_HEADERS}
-	${obs-x264-util_SOURCES})
-target_link_libraries(obs-x264-util PRIVATE libobs)
-set_target_properties(obs-x264-util PROPERTIES
+add_library(obs-x265-util STATIC
+	${obs-x265-util_HEADERS}
+	${obs-x265-util_SOURCES})
+target_link_libraries(obs-x265-util PRIVATE libobs)
+set_target_properties(obs-x265-util PROPERTIES
 	FOLDER "plugins"
 	POSITION_INDEPENDENT_CODE ON)
 
-set(obs-x264_SOURCES
-	obs-x264.c
-	obs-x264-plugin-main.c)
+set(obs-x265_SOURCES
+	obs-x265.c
+	obs-x265-plugin-main.c)
 
 if(WIN32)
-	set(MODULE_DESCRIPTION "OBS x264 encoder")
-	configure_file(${CMAKE_SOURCE_DIR}/cmake/winrc/obs-module.rc.in obs-x264.rc)
-	list(APPEND obs-x264_SOURCES
-		obs-x264.rc)
+	set(MODULE_DESCRIPTION "OBS x265 encoder")
+	configure_file(${CMAKE_SOURCE_DIR}/cmake/winrc/obs-module.rc.in obs-x265.rc)
+	list(APPEND obs-x265_SOURCES
+		obs-x265.rc)
 endif()
 
-add_library(obs-x264 MODULE
-	${obs-x264_HEADERS}
-	${obs-x264_SOURCES})
-target_link_libraries(obs-x264
+add_library(obs-x265 MODULE
+	${obs-x265_HEADERS}
+	${obs-x265_SOURCES})
+target_link_libraries(obs-x265
 	libobs
-	obs-x264-util
-	${LIBX264_LIBRARIES})
-set_target_properties(obs-x264 PROPERTIES FOLDER "plugins")
+	obs-x265-util
+	${LIBX265_LIBRARIES})
+set_target_properties(obs-x265 PROPERTIES FOLDER "plugins")
 
-install_obs_plugin_with_data(obs-x264 data)
+install_obs_plugin_with_data(obs-x265 data)
 
-add_executable(obs-x264-test obs-x264-test.c)
-set_target_properties(obs-x264-test PROPERTIES FOLDER "plugins")
-target_link_libraries(obs-x264-test PRIVATE libobs obs-x264-util)
-add_test(NAME obs-x264-test COMMAND obs-x264-test)
+add_executable(obs-x265-test obs-x265-test.c)
+set_target_properties(obs-x265-test PROPERTIES FOLDER "plugins")
+target_link_libraries(obs-x265-test PRIVATE libobs obs-x265-util)
+add_test(NAME obs-x265-test COMMAND obs-x265-test)
